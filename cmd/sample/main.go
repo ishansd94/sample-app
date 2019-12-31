@@ -7,7 +7,7 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/ishansd94/sample-app/internal/pkg/router"
+	"github.com/ishansd94/sample-app/pkg/router"
 
 	"github.com/ishansd94/sample-app/internal/app/sample"
 	"github.com/ishansd94/sample-app/internal/pkg/version"
