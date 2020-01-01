@@ -45,7 +45,7 @@ metadata:
     name: sample-app
 rules:
   - apiGroups: [""]
-    resources: ["secrets"]
+    resources: [""]
     verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
 ---
 kind: ClusterRoleBinding
@@ -81,51 +81,20 @@ $ kubectl get pods -n app -o wide
 
 ##### Payloads
 ---
-##### 1. Creating Secrets  
+##### 1. Creating Items  
 
 Expected payload as a ```POST``` request.
 
 ```
 {
-    "name": <name of the secret, string>,
-    "namespace": <kubernetes namespace, string>
-    "content": <content of the secret, json obj, optional>
+    "Field1": <string>,
+    "Field2": <json obj>
 }
 ```
-*NOTE: content is mapped to map[string]string, json obj expected is something like {"foo": "bar"}. If content field is not specified default uuid will be created*. 
+*NOTE: Field2 is mapped to map[string]string, json obj expected is something like {"foo": "bar"}. If content field is not specified default uuid will be created*. 
 
 ```
-$ curl -d '{"name":"foo", "namespace":"app"}' -H "Content-Type: application/json" -X POST <sample-app pod ip>:8000
-```
-
-```
-$ kubectl get secret -n app foo -o yaml
-apiVersion: v1
-data:
-  uuid: ZThmODhmZDgtNmMzMy00ODM5LThhMzItYzMzMDcxNWYyMzdk
-kind: Secret
-metadata:
-  creationTimestamp: "2019-02-15T06:42:58Z"
-  name: foo
-  namespace: app
-  resourceVersion: "17299"
-  selfLink: /api/v1/namespaces/app/secrets/foo
-  uid: ee596159-30ec-11e9-a4a2-00155d8a3211
-type: Opaque
-```
-##### 2. Listing Secrets
-- **Listing a particular secret**
-```
-$ curl '<sample-app pod ip>:8000/?namespace=<ns>&name=<name>'
-```
-
-- **Listing secrets in a particular namespace**
-```
-$ curl '<sample-app pod ip>:8000/?namespace=<ns>'
-```
-- **Listing all secrets**
-```
-$ curl '<sample-app pod ip>:8000'
+$ curl -d '{"Field1":"foo", "Field2":{"foo":"bar"}}' -H "Content-Type: application/json" -X POST <sample-app pod ip>:8000
 ```
 
 ### Testing
