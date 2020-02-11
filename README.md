@@ -91,7 +91,7 @@ Expected payload as a ```POST``` request.
     "Field2": <json obj>
 }
 ```
-*NOTE: Field2 is mapped to map[string]string, json obj expected is something like {"foo": "bar"}. If content field is not specified default uuid will be created*. 
+*NOTE: Field2 is mapped to map[string]string, json obj expected is something like {"foo": "bar"}.*. 
 
 ```
 $ curl -d '{"Field1":"foo", "Field2":{"foo":"bar"}}' -H "Content-Type: application/json" -X POST <sample-app pod ip>:8000

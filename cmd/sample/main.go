@@ -7,17 +7,21 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/ishansd94/sample-app/pkg/router"
-
 	"github.com/ishansd94/sample-app/internal/app/sample"
+	"github.com/ishansd94/sample-app/internal/pkg/metrics"
 	"github.com/ishansd94/sample-app/internal/pkg/version"
 	"github.com/ishansd94/sample-app/pkg/env"
 	"github.com/ishansd94/sample-app/pkg/log"
+	"github.com/ishansd94/sample-app/pkg/router"
 )
 
 func main() {
 
 	log.Info("main", fmt.Sprintf("starting service... commit: %s, build time: %s, release: %s", version.Commit, version.BuildTime, version.Release))
+
+	defaultPort := fmt.Sprintf(":%s", env.Get("PORT", "8000"))
+
+	gin.SetMode(env.Get("GIN_MODE", "debug"))
 
 	r1 := gin.Default()
 
@@ -34,13 +38,11 @@ func main() {
 
 	r2 := gin.Default()
 
-	r2.GET("/metrics", func(context *gin.Context) {
-		context.JSON(http.StatusOK, "OK")
-	})
+	r2.GET("/metrics", metrics.PrometheusMetrics)
 
 
 	server1 := &http.Server{
-		Addr:         fmt.Sprintf(":%s", env.Get("PORT", "8000")),
+		Addr:         defaultPort,
 		Handler:      r1,
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,

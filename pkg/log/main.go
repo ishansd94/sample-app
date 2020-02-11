@@ -1,19 +1,16 @@
 package log
 
 import (
-	"os"
-
-	"github.com/ishansd94/stdemuxerhook"
+	"github.com/ishansd94/sample-app/pkg/env"
 	"github.com/sirupsen/logrus"
 )
 
 func init() {
-	if os.Getenv("LOG_LEVEL") == "debug" {
+	if env.Get("LOG_LEVEL" , "debug") == "debug" {
 		logrus.SetLevel(logrus.DebugLevel)
+		// logrus.SetReportCaller(true)
 		Debug("log.init", "logging level is set to debug")
 	}
-
-	logrus.AddHook(stdemuxerhook.New(logrus.StandardLogger()))
 }
 
 func Debug(process string, msg string) {
