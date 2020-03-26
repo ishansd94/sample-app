@@ -39,17 +39,7 @@ tasks:
 
   test:
     cmds:
-      - |
-        DOCKER_BUILDKIT=0 docker build -t {{.USERNAME}}/{{.IMAGE}}:{{.RELEASE}}-test -f build/Dockerfile.test \
-        --build-arg APP={{.APP}} \
-        .
-      - |
-        if kubectl get ns | grep -q {{.EXECUTABLE}}-test;then
-          kubectl delete ns {{.EXECUTABLE}}-test
-        fi
-      - kubectl create ns {{.EXECUTABLE}}-test
-      - kubectl run -it {{.IMAGE}}-test --image={{.USERNAME}}/{{.IMAGE}}:{{.RELEASE}}-test -n {{.EXECUTABLE}}-test -- go test -v -cover -race ./internal/pkg/k8s ./cmd/{{.EXECUTABLE}}
-      - kubectl delete ns {{.EXECUTABLE}}-test
+      - go test ./...
 
   push:
     cmds:

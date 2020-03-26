@@ -61,3 +61,7 @@ func (h *Handler) gracefulShutdown() {
 func Wait() {
 	servers.Wait()
 }
+
+func (h *Handler) GetRouter() *http.Server {
+	return h.Server
+}

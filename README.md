@@ -34,69 +34,6 @@ If you use separate key for gitlab, change the location of the private key file.
 SSH_PRIVATE_KEY: $(cat ~/.ssh/id_rsa)
 ```
 
-### Usage
-In order for kube-quotas to work the ```ServiceAccount``` within the pod where it's running should have the necessary RBAC permissions.
-
-```
----
-kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-    name: sample-app
-rules:
-  - apiGroups: [""]
-    resources: [""]
-    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
----
-kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  name: sample-app
-subjects:
-  - kind: Group
-    name: system:serviceaccounts
-    apiGroup: ""
-roleRef:
-  kind: ClusterRole
-  name: sample-app
-  apiGroup: rbac.authorization.k8s.io
-```
-*NOTE: For local clusters this is not needed.* 
-
-##### Deploy to Kubernetes
-
-Create a seperate ```namespace``` for kube-quotas ex: ```app``` and create a ```deployment```.
-
-```
-$ kubectl create ns app
-$ kubectl create deployment sample-app --image=emzian7/sample-app -n app
-```
-
-##### Using sample-app web service
-
-Get the pod ip using,
-```
-$ kubectl get pods -n app -o wide
-```
-
-##### Payloads
----
-##### 1. Creating Items  
-
-Expected payload as a ```POST``` request.
-
-```
-{
-    "Field1": <string>,
-    "Field2": <json obj>
-}
-```
-*NOTE: Field2 is mapped to map[string]string, json obj expected is something like {"foo": "bar"}.*. 
-
-```
-$ curl -d '{"Field1":"foo", "Field2":{"foo":"bar"}}' -H "Content-Type: application/json" -X POST <sample-app pod ip>:8000
-```
-
 ### Testing
 
 ```

@@ -19,50 +19,63 @@ func main() {
 
 	log.Info("main", fmt.Sprintf("starting service... commit: %s, build time: %s, release: %s", version.Commit, version.BuildTime, version.Release))
 
-	defaultPort := fmt.Sprintf(":%s", env.Get("PORT", "8000"))
-
 	gin.SetMode(env.Get("GIN_MODE", "debug"))
 
-	r1 := gin.Default()
 
-	r1.Use(cors.Default())
+	apiserver := apiServer()
+	apiserver.Start()
 
-	apiv1 := r1.Group("/api/v1")
-	{
-		apiv1.GET("", sample.Get)
-		apiv1.POST("", sample.Create)
-	}
-
-	r1.GET("/version", version.Get)
-
-
-	r2 := gin.Default()
-
-	r2.GET("/metrics", metrics.PrometheusMetrics)
-
-
-	server1 := &http.Server{
-		Addr:         defaultPort,
-		Handler:      r1,
-		ReadTimeout:  5 * time.Second,
-		WriteTimeout: 10 * time.Second,
-	}
-
-	server2 := &http.Server{
-		Addr:         ":9000",
-		Handler:      r2,
-		ReadTimeout:  5 * time.Second,
-		WriteTimeout: 10 * time.Second,
-	}
-
-
-	serv1 := router.NewRouter("app-server", server1)
-	serv1.Start()
-
-	serv2 := router.NewRouter("metrics-server", server2)
-	serv2.Start()
-
+	metricsserver := metricsServer()
+	metricsserver.Start()
 
 	router.Wait()
 
+}
+
+
+func apiServer() *router.Handler {
+
+	defaultPort := fmt.Sprintf(":%s", env.Get("PORT", "8000"))
+
+	r := gin.Default()
+	r.Use(cors.Default())
+
+	// api server private endpoints
+	apiv1 := r.Group("/api/v1")
+	{
+		apiv1.GET("sample", sample.Get)
+		apiv1.POST("sample", sample.Create)
+	}
+
+	// api server public endpoints
+	r.GET("/version", version.Get)
+
+	serverConfig := &http.Server{
+		Addr:         defaultPort,
+		Handler:      r,
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
+	}
+
+	server := router.NewRouter("app-server", serverConfig)
+
+	return server
+}
+
+
+func metricsServer() *router.Handler {
+	r := gin.Default()
+
+	r.GET("/metrics", metrics.PrometheusMetrics)
+
+	serverConfig := &http.Server{
+		Addr:         ":9000",
+		Handler:      r,
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
+	}
+
+	server := router.NewRouter("metrics-server", serverConfig)
+
+	return server
 }

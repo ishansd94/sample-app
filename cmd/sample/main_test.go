@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ishansd94/sample-app/internal/app/secret"
+	"github.com/ishansd94/sample-app/internal/app/sample"
 )
 
 func req(r http.Handler, method, path string, body string) *httptest.ResponseRecorder {
@@ -23,21 +23,20 @@ func req(r http.Handler, method, path string, body string) *httptest.ResponseRec
 	return w
 }
 
-func TestGin(t *testing.T) {
+func TestAPIServer(t *testing.T) {
 
-	r := Router()
+	apiserver := apiServer()
 
 	// #1
-	w := req(r.Handler, "GET", "/version", "")
+	w := req(apiserver.GetRouter().Handler, "GET", "/version", "")
 	if w.Code != http.StatusOK {
 		t.Errorf("expected statusOK,  got %v", w.Code)
 	}
 
 	// #2
-	d, err := json.Marshal(secret.Request{
-		Name: "foo",
-		Namespace: "sample-test",
-		Content: map[string]string{
+	d, err := json.Marshal(sample.Request{
+		Field1: "foo",
+		Field2: map[string]string{
 			"foo": "bar",
 		},
 	})
@@ -45,38 +44,20 @@ func TestGin(t *testing.T) {
 		t.Errorf("cannot marshall %v", err)
 	}
 
-	w = req(r.Handler, "POST", "/", string(d))
+	w = req(apiServer().GetRouter().Handler, "POST", "/api/v1/sample", string(d))
 	if w.Code != http.StatusCreated {
 		t.Errorf("expected statusCreated,  got %v, respones: %v", w.Code, w.Body)
 	}
 
 	// #3
-	w = req(r.Handler, "POST", "/", "")
+	w = req(apiServer().GetRouter().Handler, "POST", "/api/v1/sample", "")
 	if w.Code != http.StatusBadRequest {
 		t.Errorf("expected statusBadRequest,  got %v, respones: %v", w.Code, w.Body)
 	}
 
 	// #4
-	w = req(r.Handler, "POST", "/?name=foo", "")
-	if w.Code != http.StatusBadRequest {
-		t.Errorf("expected statusBadRequest,  got %v, respones: %v", w.Code, w.Body)
-	}
-
-	// #5
-	w = req(r.Handler, "GET", "/?namespace=sample-test", "")
+	w = req(apiServer().GetRouter().Handler, "GET", "/api/v1/sample", "")
 	if w.Code != http.StatusOK {
 		t.Errorf("expected statusOK,  got %v, respones: %v", w.Code, w.Body)
-	}
-
-	// #6
-	w = req(r.Handler, "GET", "/?namespace=sample-test&name=foo", "")
-	if w.Code != http.StatusOK {
-		t.Errorf("expected statusOK,  got %v, respones: %v", w.Code, w.Body)
-	}
-
-	// #7
-	w = req(r.Handler, "GET", "/?namespace=sample-test&name=f", "")
-	if w.Code != http.StatusNotFound {
-		t.Errorf("expected statusNotFound,  got %v, respones: %v", w.Code, w.Body)
 	}
 }
