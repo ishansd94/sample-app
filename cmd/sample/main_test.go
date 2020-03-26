@@ -44,19 +44,19 @@ func TestAPIServer(t *testing.T) {
 		t.Errorf("cannot marshall %v", err)
 	}
 
-	w = req(apiServer().GetRouter().Handler, "POST", "/api/v1/sample", string(d))
+	w = req(*apiserver.GetRouterHandler(), "POST", "/api/v1/sample", string(d))
 	if w.Code != http.StatusCreated {
 		t.Errorf("expected statusCreated,  got %v, respones: %v", w.Code, w.Body)
 	}
 
 	// #3
-	w = req(apiServer().GetRouter().Handler, "POST", "/api/v1/sample", "")
+	w = req(*apiserver.GetRouterHandler(), "POST", "/api/v1/sample", "")
 	if w.Code != http.StatusBadRequest {
 		t.Errorf("expected statusBadRequest,  got %v, respones: %v", w.Code, w.Body)
 	}
 
 	// #4
-	w = req(apiServer().GetRouter().Handler, "GET", "/api/v1/sample", "")
+	w = req(*apiserver.GetRouterHandler(), "GET", "/api/v1/sample", "")
 	if w.Code != http.StatusOK {
 		t.Errorf("expected statusOK,  got %v, respones: %v", w.Code, w.Body)
 	}

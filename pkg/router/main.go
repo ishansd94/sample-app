@@ -65,3 +65,7 @@ func Wait() {
 func (h *Handler) GetRouter() *http.Server {
 	return h.Server
 }
+
+func (h *Handler) GetRouterHandler() *http.Handler {
+	return &h.GetRouter().Handler
+}
