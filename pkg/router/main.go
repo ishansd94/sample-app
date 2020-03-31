@@ -22,8 +22,6 @@ var servers sync.WaitGroup
 
 func NewRouter(name string, httpServer *http.Server) *Handler {
 
-	servers.Add(1)
-
 	return &Handler{
 		Name:             name,
 		Server:           httpServer,
@@ -32,6 +30,8 @@ func NewRouter(name string, httpServer *http.Server) *Handler {
 }
 
 func (h *Handler) Start() {
+
+	servers.Add(1)
 
 	go h.gracefulShutdown()
 
