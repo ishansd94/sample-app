@@ -6,10 +6,11 @@ services:
   - docker
 
 before_install:
+  - curl -sL https://taskfile.dev/install.sh | sh
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 
-install:
-  - task build
-
-script:
-  - task
+#install:
+#  - task build
+#
+#script:
+#  - task test

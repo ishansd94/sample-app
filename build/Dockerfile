@@ -39,7 +39,7 @@ RUN dep version
 COPY . ${GOPATH}/src/${APP}
 WORKDIR ${GOPATH}/src/${APP}
 
-RUN dep ensure -v
+RUN go mod vendor
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
         go build -a -installsuffix cgo \
         -ldflags="-w -s \
@@ -70,6 +70,7 @@ COPY --from=builder /go/src/${APP}/${EXECUTABLE} /${EXECUTABLE}
 # Use an unprivileged user.
 USER app
 
-EXPOSE 8000
+EXPOSE 8080
+EXPOSE 9090
 
 ENTRYPOINT ["./sample"]

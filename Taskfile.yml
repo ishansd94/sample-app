@@ -29,7 +29,7 @@ tasks:
       - |
         DOCKER_BUILDKIT=0 docker build \
         -f build/Dockerfile \
-        -t {{.USERNAME}}/{{.IMAGE}}:{{.RELEASE}} \
+        -t {{.USERNAME}}/{{.IMAGE}}:{{.COMMIT}} \
         --build-arg APP={{.APP}} \
         --build-arg EXECUTABLE={{.EXECUTABLE}} \
         --build-arg SSH_PRIVATE_KEY="{{.SSH_PRIVATE_KEY}}" \
@@ -37,17 +37,30 @@ tasks:
         --build-arg COMMIT={{.COMMIT}} \
         --build-arg BUILDTIME={{.BUILDTIME}} \
         .
-      - docker tag {{.USERNAME}}/{{.IMAGE}}:{{.RELEASE}} {{.USERNAME}}/{{.IMAGE}}:latest
     desc: Build the application into a docker image.
 
+  tag:
+    cmds:
+      - docker tag {{.USERNAME}}/{{.IMAGE}}:{{.COMMIT}} {{.USERNAME}}/{{.IMAGE}}:{{.RELEASE}}
+      - docker tag {{.USERNAME}}/{{.IMAGE}}:{{.COMMIT}} {{.USERNAME}}/{{.IMAGE}}:latest
+
   test:
+    cmds:
+      - |
+        DOCKER_BUILDKIT=0 docker build \
+        -f build/Test.Dockerfile \
+        -t {{.IMAGE}}:{{.COMMIT}}-testing \
+        .
+      - docker run {{.IMAGE}}:{{.COMMIT}}-testing go test ./... -v -cover -race
+
+  testlocal:
     cmds:
       - go test ./... -v -cover -race
     desc: Run the unit tests
 
   push:
     cmds:
-      - task: build
+      - task: tag
       - docker push {{.USERNAME}}/{{.IMAGE}}:{{.RELEASE}}
       - docker push {{.USERNAME}}/{{.IMAGE}}
     desc: Build the docker image and push the image to docker hub.
