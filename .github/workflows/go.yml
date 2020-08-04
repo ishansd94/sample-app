@@ -31,4 +31,4 @@ jobs:
       - name: Install ssh key
         run: "ssh-keygen -q -t rsa -f ~/.ssh/id_rsa -N ''"
       - name: Get dependencies
-        run: task build
+        run: task test
