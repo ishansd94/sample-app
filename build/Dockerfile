@@ -28,8 +28,8 @@ RUN eval `ssh-agent -s` && ssh-add /root/.ssh/id_rsa
 RUN git config --global url."git@gitlab.com:".insteadOf "https://gitlab.com/"
 RUN git config --global url."git@github.com:".insteadOf "https://github.com/"
 
-# Create appuser.
-RUN adduser -D -g '' appuser
+# Create app user.
+RUN adduser -D -g '' app
 
 #Installing Dep. Package manager for Go
 RUN curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
@@ -67,7 +67,7 @@ COPY --from=builder /etc/passwd /etc/passwd
 COPY --from=builder /go/src/${APP}/${EXECUTABLE} /${EXECUTABLE}
 
 # Use an unprivileged user.
-USER appuser
+USER app
 
 EXPOSE 8000
 

@@ -25,7 +25,7 @@ func Create(c *gin.Context) {
 
 	var req Request
 	if err := c.BindJSON(&req); err != nil {
-		log.Error("sample.Create", "error while binding request", err)
+		log.Debug("sample.Create", "error while binding request, err: "+err.Error())
 		response.Default(c, http.StatusBadRequest)
 		return
 	}

@@ -2,14 +2,16 @@ package main
 
 import (
 	"fmt"
+	"github.com/ishansd94/sample-app/internal/app/healthz"
 	"net/http"
 	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+
 	"github.com/ishansd94/sample-app/internal/app/sample"
+	"github.com/ishansd94/sample-app/internal/app/version"
 	"github.com/ishansd94/sample-app/internal/pkg/metrics"
-	"github.com/ishansd94/sample-app/internal/pkg/version"
 	"github.com/ishansd94/sample-app/pkg/env"
 	"github.com/ishansd94/sample-app/pkg/log"
 	"github.com/ishansd94/sample-app/pkg/router"
@@ -21,7 +23,6 @@ func main() {
 
 	gin.SetMode(env.Get("GIN_MODE", "debug"))
 
-
 	apiserver := apiServer()
 	apiserver.Start()
 
@@ -31,7 +32,6 @@ func main() {
 	router.Wait()
 
 }
-
 
 func apiServer() *router.Handler {
 
@@ -50,6 +50,8 @@ func apiServer() *router.Handler {
 	// api server public endpoints
 	r.GET("/version", version.Get)
 
+	r.GET("/healthz", healthz.Health)
+
 	serverConfig := &http.Server{
 		Addr:         defaultPort,
 		Handler:      r,
@@ -62,14 +64,15 @@ func apiServer() *router.Handler {
 	return server
 }
 
-
 func metricsServer() *router.Handler {
 	r := gin.Default()
+
+	metricsPort := fmt.Sprintf(":%s", env.Get("METRICS_PORT", "9090"))
 
 	r.GET("/metrics", metrics.PrometheusMetrics)
 
 	serverConfig := &http.Server{
-		Addr:         ":9000",
+		Addr:         metricsPort,
 		Handler:      r,
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
