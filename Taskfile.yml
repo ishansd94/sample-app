@@ -49,7 +49,8 @@ tasks:
       - |
         DOCKER_BUILDKIT=0 docker build \
         -f build/Test.Dockerfile \
-        -t {{.IMAGE}}:{{.COMMIT}}-testing
+        -t {{.IMAGE}}:{{.COMMIT}}-testing \
+        .
       - docker run {{.IMAGE}}:{{.COMMIT}}-testing go test ./... -v -cover -race
 
   testlocal:
