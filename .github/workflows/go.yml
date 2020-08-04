@@ -2,21 +2,18 @@ name: Go
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, dev ]
   pull_request:
     branches: [ master ]
 
 jobs:
-  deps:
-    name: Dependencies
-    runs-on: ubuntu-latest
-    steps:
-      - name: Install Task
-        uses: Arduino/actions/setup-taskfile@master
-
   build:
     name: Build
     runs-on: ubuntu-latest
     steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Install Task
+      uses: Arduino/actions/setup-taskfile@master
     - name: Get dependencies
       run: task build
