@@ -11,11 +11,24 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-    - name: Install Task
-      uses: Arduino/actions/setup-taskfile@master
-    - name: Install ssh key
-      run : "ssh-keygen -q -t rsa -f ~/.ssh/id_rsa -N ''"
-    - name: Get dependencies
-      run: task build
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install Task
+        uses: Arduino/actions/setup-taskfile@master
+      - name: Install ssh key
+        run: "ssh-keygen -q -t rsa -f ~/.ssh/id_rsa -N ''"
+      - name: Get dependencies
+        run: task build
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install Task
+        uses: Arduino/actions/setup-taskfile@master
+      - name: Install ssh key
+        run: "ssh-keygen -q -t rsa -f ~/.ssh/id_rsa -N ''"
+      - name: Get dependencies
+        run: task build

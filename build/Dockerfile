@@ -70,6 +70,7 @@ COPY --from=builder /go/src/${APP}/${EXECUTABLE} /${EXECUTABLE}
 # Use an unprivileged user.
 USER app
 
-EXPOSE 8000
+EXPOSE 8080
+EXPOSE 9090
 
 ENTRYPOINT ["./sample"]
