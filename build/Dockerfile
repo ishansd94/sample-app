@@ -39,7 +39,7 @@ RUN dep version
 COPY . ${GOPATH}/src/${APP}
 WORKDIR ${GOPATH}/src/${APP}
 
-RUN dep ensure -v
+go mod vendor
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
         go build -a -installsuffix cgo \
         -ldflags="-w -s \
