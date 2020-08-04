@@ -16,11 +16,13 @@ vars:
 tasks:
   install:
     cmds:
-      - dep ensure -v
+      - dep ensure
+    desc: Install the dependencies.
 
   run:
     cmds:
       - go run cmd/{{.EXECUTABLE}}/main.go
+    desc: Run the application.
 
   build:
     cmds:
@@ -36,12 +38,16 @@ tasks:
         --build-arg BUILDTIME={{.BUILDTIME}} \
         .
       - docker tag {{.USERNAME}}/{{.IMAGE}}:{{.RELEASE}} {{.USERNAME}}/{{.IMAGE}}:latest
+    desc: Build the application into a docker image.
 
   test:
     cmds:
       - go test ./... -v -cover -race
+    desc: Run the unit tests
 
   push:
     cmds:
+      - task: build
       - docker push {{.USERNAME}}/{{.IMAGE}}:{{.RELEASE}}
       - docker push {{.USERNAME}}/{{.IMAGE}}
+    desc: Build the docker image and push the image to docker hub.

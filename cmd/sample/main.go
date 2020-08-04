@@ -29,7 +29,7 @@ func main() {
 	metricsserver := metricsServer()
 	metricsserver.Start()
 
-	router.Wait()
+	router.Listen()
 
 }
 

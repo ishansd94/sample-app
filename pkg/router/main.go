@@ -58,7 +58,7 @@ func (h *Handler) gracefulShutdown() {
 	servers.Done()
 }
 
-func Wait() {
+func Listen() {
 	servers.Wait()
 }
 

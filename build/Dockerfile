@@ -1,7 +1,8 @@
 ##################################
 # STEP 1 build executable binary #
 ##################################
-ARG GO_VERSION=1.11
+ARG GO_VERSION=1.14.5
+ARG GO_VERSION=1.14.5
 ARG SSH_PRIVATE_KEY
 ARG APP
 ARG EXECUTABLE
