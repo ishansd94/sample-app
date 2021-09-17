@@ -14,6 +14,12 @@ vars:
   BUILDTIME: $(date -u '+%Y-%m-%d_%H:%M:%S')
 
 tasks:
+
+  proto:
+    cmds:
+#      - protoc --proto_path=./internal/app/sample/proto --proto_path=third_party --go_out=./internal/app/sample/proto --go-grpc_out=./internal/app/sample/proto sample.proto
+       - protoc --proto_path=./internal/app/sample/proto --proto_path=third_party --go_out=./internal/app/sample/proto  sample.proto
+
   install:
     cmds:
       - dep ensure

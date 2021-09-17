@@ -63,7 +63,6 @@ func Default(c *gin.Context, statusCode int) {
 }
 
 func Custom(c *gin.Context, statusCode int, m gin.H) {
-
     switch statusCode {
 
     case http.StatusOK:
@@ -89,6 +88,5 @@ func Custom(c *gin.Context, statusCode int, m gin.H) {
     case http.StatusInternalServerError:
         _ = mergo.Map(&m, StatusInternalServerError)
         c.JSON(http.StatusInternalServerError, m)
-
     }
 }

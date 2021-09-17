@@ -1,0 +1,18 @@
+syntax = 'proto3';
+
+option go_package = "./;proto";
+
+package proto;
+
+message Sample {
+  string foo = 1;
+  string bar = 2;
+}
+
+//message SampleResponse {
+//  string foobar = 1;
+//}
+//
+//service ConcatService {
+//  rpc Concat(SampleRequest) returns (SampleResponse);
+//}
