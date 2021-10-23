@@ -11,8 +11,7 @@ import (
 	"github.com/go-redis/redis/v8"
 
 	"github.com/ishansd94/sample-app/internal/app/healthz"
-	"github.com/ishansd94/sample-app/internal/app/rsend_broker"
-	"github.com/ishansd94/sample-app/internal/app/sample"
+	"github.com/ishansd94/sample-app/internal/app/remote_broker"
 	"github.com/ishansd94/sample-app/internal/app/version"
 	"github.com/ishansd94/sample-app/pkg/env"
 	"github.com/ishansd94/sample-app/pkg/log"
@@ -53,7 +52,7 @@ func main() {
 
 func apiServer() *router.Handler {
 
-	defaultPort := fmt.Sprintf(":%s", env.Get(rsend_broker.RSEND_BROKER_API_PORT, rsend_broker.DEFULT_RSEND_BROKER_API_PORT))
+	defaultPort := fmt.Sprintf(":%s", env.Get(remote_broker.REMOTE_BROKER_API_PORT, remote_broker.DEFUALT_REMOTE_BROKER_API_PORT))
 
 	r := gin.Default()
 	r.Use(cors.Default())
@@ -61,8 +60,11 @@ func apiServer() *router.Handler {
 	// api server private endpoints
 	apiv1 := r.Group("/api/v1")
 	{
-		apiv1.GET("sample", sample.Get)
-		apiv1.POST("sample", sample.Create)
+		apifs := apiv1.Group("fs")
+		{
+			apifs.POST("/")
+			apifs.GET("/:name")
+		}
 	}
 
 	// api server public endpoints
@@ -77,24 +79,22 @@ func apiServer() *router.Handler {
 		WriteTimeout: 10 * time.Second,
 	}
 
-	server := router.NewRouter("rsend-broker-api", serverConfig)
+	server := router.NewRouter("remote-broker-api", serverConfig)
 
 	return server
 }
 
 func wsServer() *router.Handler {
 
-	defaultPort := fmt.Sprintf(":%s", env.Get(rsend_broker.RSEND_BROKER_WS_PORT, rsend_broker.DEFULT_RSEND_BROKER_WS_PORT))
+	defaultPort := fmt.Sprintf(":%s", env.Get(remote_broker.REMOTE_BROKER_WS_PORT, remote_broker.DEFUALT_REMOTE_BROKER_WS_PORT))
 
 	r := gin.Default()
 	r.Use(cors.Default())
 
-
-
 	// api server private endpoints
 	apiv1 := r.Group("/v1")
 	{
-		apiv1.GET("ws",  rsend_broker.Get)
+		apiv1.GET("ws",  remote_broker.Get)
 		//apiv1.POST("ws", rsend_broker.Post)
 	}
 
@@ -110,7 +110,7 @@ func wsServer() *router.Handler {
 		WriteTimeout: 10 * time.Second,
 	}
 
-	server := router.NewRouter("rsend-broker-ws", serverConfig)
+	server := router.NewRouter("remote-broker-ws", serverConfig)
 
 	return server
 }

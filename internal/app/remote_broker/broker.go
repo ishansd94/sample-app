@@ -1,4 +1,4 @@
-package rsend_broker
+package remote_broker
 
 import (
 	"fmt"
@@ -26,6 +26,5 @@ func Get(c *gin.Context) {
 }
 
 func Post(c *gin.Context) {
-
 
 }

@@ -1,6 +1,0 @@
-package rsend_broker
-
-const (
-	DEFULT_RSEND_BROKER_API_PORT = "8000"
-	DEFULT_RSEND_BROKER_WS_PORT = "8001"
-)

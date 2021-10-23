@@ -1,0 +1,6 @@
+package remote_broker
+
+const (
+	DEFUALT_REMOTE_BROKER_API_PORT = "8000"
+	DEFUALT_REMOTE_BROKER_WS_PORT = "8001"
+)
