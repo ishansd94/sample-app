@@ -28,7 +28,7 @@ func main() {
 
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     "bhm3dfw74kdaxsakoyww-redis.services.clever-cloud.com:3434",
-		Password: "9n8IQfM1OvfBvp4HVWo", // no password set
+		Password: "", // no password set
 		DB:       0,  // use default DB
 	})
 
