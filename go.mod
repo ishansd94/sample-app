@@ -9,6 +9,7 @@ require (
 	github.com/gin-contrib/requestid v0.0.1
 	github.com/gin-gonic/gin v1.7.4
 	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible
+	github.com/go-ping/ping v0.0.0-20211014180314-6e2b003bffdd
 	github.com/go-redis/redis/v8 v8.11.3
 	github.com/gookit/cache v0.2.0 // indirect
 	github.com/gookit/event v1.0.5
